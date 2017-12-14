@@ -1,0 +1,128 @@
+﻿
+@{
+	Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+	<meta name="viewport" content="width=device-width" />
+	<title>Test</title>
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css" integrity="sha384-PsH8R72JQ3SOdhVi3uxftmaW6Vc51MKb0q5P2rRUpPvrszuE4W1povHYgTpBfshb" crossorigin="anonymous">
+</head>
+<body>
+	<form>
+		<div class="card">
+			<div class="card-body">
+				<h3 class="card-title">Get Coordinates</h3>
+
+				<div class="container">
+					<div class="row">
+						<div class="col-md-2">Row:</div>
+						<div class="col-md-10"><input type="text" id="row" name="row" /></div>
+					</div>
+					<div class="row">
+						<div class="col-md-2">Column:</div>
+						<div class="col-md-10"><input type="text" id="column" name="column" /></div>
+					</div>
+					<div class="row">
+						<div class="col-md-12"><button class="btn btn-primary" id="getCoordinate" name="getCoordinate">Get Coordinates</button></div>
+					</div>
+					<div class="card-footer">
+						<div>V1: <span id="v1Display"></span></div>
+						<div>V2: <span id="v2Display"></span></div>
+						<div>V3: <span id="v3Display"></span></div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="card">
+			<div class="card-body">
+				<h3 class="card-title">Get Row/Column</h3>
+
+				<div class="container">
+					<div class="row">
+						<div class="col-md-2">V1 X:</div>
+						<div class="col-md-10"><input type="text" id="v1x" name="v1x" /></div>
+					</div>
+					<div class="row">
+						<div class="col-md-2">V1 Y:</div>
+						<div class="col-md-10"><input type="text" id="v1y" name="v1y" /></div>
+					</div>
+					<div class="row">
+						<div class="col-md-2">V2 X:</div>
+						<div class="col-md-10"><input type="text" id="v2x" name="v2x" /></div>
+					</div>
+					<div class="row">
+						<div class="col-md-2">V2 Y:</div>
+						<div class="col-md-10"><input type="text" id="v2y" name="v2y" /></div>
+					</div>
+					<div class="row">
+						<div class="col-md-2">V3 X:</div>
+						<div class="col-md-10"><input type="text" id="v3x" name="v3x" /></div>
+					</div>
+					<div class="row">
+						<div class="col-md-2">V3 Y:</div>
+						<div class="col-md-10"><input type="text" id="v3y" name="v3y" /></div>
+					</div>
+					<div class="row">
+						<div class="col-md-12"><button class="btn btn-primary" id="getRowColumn" name="getRowColumn">Get Row/Column</button></div>
+					</div>
+					<div class="card-footer">
+						<div>Row: <span id="rowDisplay"></span></div>
+						<div>Column: <span id="columnDisplay"></span></div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</form>
+</body>
+</html>
+<script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+<script>
+	$().ready(function () {
+		$('#getCoordinate').click(function () {
+			getCoordinates($('#row').val(), $('#column').val(), $('#v1Display'), $('#v2Display'), $('#v3Display'));
+			return false;
+		});
+
+		$('#getRowColumn').click(function () {
+			getRowColumn($('#v1x').val(), $('#v1y').val(), $('#v2x').val(), $('#v2y').val(), $('#v3x').val(), $('#v3y').val(), $('#rowDisplay'), $('#columnDisplay'));
+			return false;
+		});
+	});
+
+	function getRowColumn(v1x, v1y, v2x, v2y, v3x, v3y, rowDisplay, columnDisplay) {
+		$.ajax({
+			url: 'http://localhost:52149/api/triangle/' + v1x + '/' + v1y + '/' + v2x + '/' + v2y + '/' + v3x + '/' + v3y,
+			type: 'GET',
+			dataType: 'json',
+			success: function (data) {
+				rowDisplay.html(data.row);
+				columnDisplay.html(data.column);
+			},
+			error: function (x, y, z) {
+				alert(x + '\n' + y + '\n' + z);
+			}
+		});
+	}
+
+	function getCoordinates(row, column, v1Display, v2Display, v3Display) {
+		$.ajax({
+			url: 'http://localhost:52149/api/triangle/' + row + '/' + column,
+			type: 'GET',
+			dataType: 'json',
+			success: function (data) {
+				v1Display.html(data.v1);
+				v2Display.html(data.v2);
+				v3Display.html(data.v3);
+			},
+			error: function (x, y, z) {
+				alert(x + '\n' + y + '\n' + z);
+			}
+		});
+	}
+
+</script>
